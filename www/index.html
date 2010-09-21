@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><script language="javascript">
+<!--
+var bluecoat_allow_popup = false;
+var bluecoat_original_open = window.open;
+window.open = bluecoat_gated_open;
+function bluecoat_gated_open(url, name, parms)
+{
+    if (bluecoat_allow_popup) {
+        // A navigation event is restricted to opening at most one window.
+        bluecoat_allow_popup = false;
+        return bluecoat_original_open(url, name, parms);
+    } else if (window.event && window.event.shiftKey) {
+        // Popups can open freely while the shift key is held down.
+        // Only works in IE, and even then, not inside a Java app.
+        return bluecoat_original_open(url, name, parms);
+    } else {
+        // alert("blocked popup ('" + url + "', '" + name + "')");
+        window.status='blocked popup window -- use CTRL Refresh to see all popups';
+        return null;
+    }
+}
+function bluecoat_stop_error()
+{
+    return true;
+}
+window.onerror = bluecoat_stop_error;
+function bluecoat_fixhandler(elem, attr)
+{
+    var h = elem.getAttribute(attr);
+    if (h != null) {
+        if (typeof(h) == "string") {
+            if (h.substring(0,11) == "javascript:") {
+                if (h.substring(11,13) != "//") {
+                    elem.setAttribute(attr,
+                        "javascript:bluecoat_allow_popup=true;"
+                        + h.substring(11)
+                        + ";void(bluecoat_allow_popup=false)");
+                }
+            } else {
+                elem.setAttribute(attr,
+                    "bluecoat_allow_popup=true;try{\n"
+                    + h
+                    + "\n}finally{bluecoat_allow_popup=false;}");
+            }
+        } else {
+            elem.setAttribute(attr,
+                function() {
+                    bluecoat_allow_popup = true;
+                    var result = h.call(elem);
+                    bluecoat_allow_popup = false;
+                    return result;
+                });
+        }
+    }
+}
+function bluecoat_fixpopups()
+{
+    var i;
+    var j;
+    var ls = document.links;
+    for (i = 0; i < ls.length; ++i) {
+        var link = ls[i];
+        if (link.protocol == "javascript:"
+            && link.href.substring(11,13) != "//")
+        {
+            link.href =
+                "javascript:bluecoat_allow_popup=true;"
+                + link.href.substring(11)
+                + ";void(bluecoat_allow_popup=false)";
+        }
+        bluecoat_fixhandler(link, "onclick");
+        bluecoat_fixhandler(link, "onmousedown");
+        bluecoat_fixhandler(link, "onmouseup");
+    }
+    var fs = document.forms;
+    for (i = 0; i < fs.length; ++i) {
+        var f = fs[i];
+        bluecoat_fixhandler(f, "onsubmit");
+        var es = f.elements;
+        for (j = 0; j < es.length; ++j) {
+            bluecoat_fixhandler(es[j], "onclick");
+            bluecoat_fixhandler(es[j], "onmousedown");
+            bluecoat_fixhandler(es[j], "onmouseup");
+        }
+    }
+}
+//-->
+</script>
+ 
+<p>
+<img src="logo.png" class="leftno" alt="R-forge" title="R-forge Logo" width="150">
+<center><font size="10" color="black">R package for Nested Effects Model Object-oriented</font> </center>
+</p>
+
+<p>
+Nested Effect Models (NEMs) are a group of graphical models for reconstruction of cellular signalling pathways based on downstream effects after systematic perturbations of signalling genes. They have been successfully used in many real biological applications. 
+</p>
+<h2>Features</h2>
+<ul>
+<li>The Nested Effects Model Object-oriented (NEMO) package for R is designed for all existing NEMs and tries to organize them in an object-oriented framework, facilitating a clear understanding of the intrinsic relationships among them. In addition, we are developing an extended model of NEM to infer dynamic signalling pathways in my Lab. The structure of NEMO will allow an easy extension for our future models.</li>
+<li>Another feature of NEMO is that its network graphic engine is based on another package in R-forge called 'IGIR', which provides a much better network visualization power than any other existing graphic engines in R.</li>
+</ul>
+
+<h2>Download</h2>
+
+<p>
+You can download the latest version from <a href="https://r-forge.r-project.org/R/?group_id=895">here</a>.
+</p>
+
+
+<h2>References</h2>
+	<ul>
+
+	<li>
+	F. Markowetz, J. Bloch, R. Spang. Non-transcriptional Pathway Features Reconstructed from Secondary Effects of RNA Interference. Bioinformatics 2005 21: 4026-4032
+	</li>
+
+	<li>
+	F. Markowetz, D. Kostka, O.G. Troyanskaya, R. Spang. Nested Effects Models for High-Dimensional Phenotyping Screens. Bioinformatics 2007 23(13):i305-i312 
+	</li>
+
+	</ul>
+        
+	<div id="subcontent">
+		<h2>Developers</h2>		
+		<ul>
+			<li><a href="http://www.markowetzlab.org/xin/index.html">Xin Wang</a></li>
+		</ul>          
+	</div>
