@@ -1,0 +1,17 @@
+sample	group	replicate
+ctr_neg_1	ctr_neg	1
+ctr_neg_2	ctr_neg	2
+ctr_neg_3	ctr_neg	3
+ctr_neg_4	ctr_neg	4
+ctr_pos_1	ctr_pos	1
+ctr_pos_2	ctr_pos	2
+ctr_pos_3	ctr_pos	3
+ctr_pos_4	ctr_pos	4
+rel_1	rel	1
+rel_2	rel	2
+key_1	key	1
+key_2	key	2
+tak_1	tak	1
+tak_2	tak	2
+mkk4hep_1	mkk4hep	1
+mkk4hep_2	mkk4hep	2
